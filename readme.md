@@ -58,4 +58,4 @@ Contributions to the Simple Snake Game project are welcome! If you'd like to con
 
 ## License
 
-The Simple Snake Game project is licensed under the [MIT License](license).
+The Simple Snake Game project is licensed under the [MIT License](license.md).

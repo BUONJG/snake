@@ -6,7 +6,7 @@ function resizeContainer() {
 }
 
 let snake = [];
-let snakeDirection = 'Right';
+let snakeDirection = 'right';
 const boardSize = 25;
 let gameOver = false;
 let snakeGrowCount = 0;
@@ -15,7 +15,16 @@ function initGame() {
     document.querySelector(':root').style.setProperty('--board-size', boardSize);
 
     document.addEventListener("keydown", (event) => {
-       updateSnakeDirection(event.key);
+        if (event.key.startsWith('Arrow')) {
+            updateSnakeDirection(event.key.replace('Arrow', '').toLowerCase());
+        }
+    });
+
+    const container = document.getElementsByClassName('container')[0];
+
+    var mc = new Hammer(container);
+    mc.on("swipe", function(event) {
+        updateSnakeDirection(event.type.replace('swipe', ''));
     });
 
     resizeContainer();
@@ -27,7 +36,7 @@ function initGame() {
         }
     }
 
-    document.getElementsByClassName('container')[0].innerHTML = content;
+    container.innerHTML = content;
 
     for (let x = 0; x < boardSize; x++) {
         setCellContent([0, x], 'wall');
@@ -82,39 +91,39 @@ function moveSnake() {
     }
 }
 
-function updateSnakeDirection(key) {
-    if (['Right', 'Left'].includes(snakeDirection)) {
-        if (key === 'ArrowUp') {
-            snakeDirection = 'Up';
+function updateSnakeDirection(direction) {
+    if (['right', 'left'].includes(snakeDirection)) {
+        if (direction === 'up') {
+            snakeDirection = 'up';
         }
-        if (key === 'ArrowDown') {
-            snakeDirection = 'Down';
+        if (direction === 'down') {
+            snakeDirection = 'down';
         }
     } else {
-        if (key === 'ArrowLeft') {
-            snakeDirection = 'Left';
+        if (direction === 'left') {
+            snakeDirection = 'left';
         }
-        if (key === 'ArrowRight') {
-            snakeDirection = 'Right';
+        if (direction === 'right') {
+            snakeDirection = 'right';
         }
     }
 }
 
 function deltaX() {
-    if (snakeDirection === 'Up') {
+    if (snakeDirection === 'up') {
         return -1;
     }
-    if (snakeDirection === 'Down') {
+    if (snakeDirection === 'down') {
         return 1;
     }
     return 0;
 }
 
 function deltaY() {
-    if (snakeDirection === 'Left') {
+    if (snakeDirection === 'left') {
         return -1;
     }
-    if (snakeDirection === 'Right') {
+    if (snakeDirection === 'right') {
         return 1;
     }
     return 0;
