@@ -22,8 +22,11 @@ function initGame() {
 
     const container = document.getElementsByClassName('container')[0];
 
-    var mc = new Hammer(container);
-    mc.on("swipe", function(event) {
+    // Detect swipe
+    var manager = new Hammer.Manager(container);
+    manager.add(new Hammer.Swipe());
+    manager.on("swipe", function(event) {
+        alert(event.type);
         updateSnakeDirection(event.type.replace('swipe', ''));
     });
 
