@@ -1,0 +1,50 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    position: absolute;
+    width: 100%;
+    top: 0px;
+    bottom: 0px;
+    overflow: hidden;
+
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+
+.container {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.container > div {
+    width: calc(100% / var(--board-size));
+    height: calc(100% / var(--board-size));
+
+    background-color: #e0f0e3;
+}
+
+.container > div:nth-child(odd) {
+    background-color: #c8e1cc;
+}
+
+.container > div[content='snake'] {
+    background-color: #3386FF;
+}
+
+.container > div[content='wall'] {
+    background-color: #6F4E37;
+}
+
+.container > div[content='apple'] {
+    background-image: url(./assets/apple.png);
+    background-size: 80%;
+    background-repeat: no-repeat;
+    background-position: center center;
+}
