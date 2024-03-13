@@ -25,8 +25,7 @@ function initGame() {
     // Detect swipe
     var manager = new Hammer.Manager(container);
     manager.add(new Hammer.Swipe());
-    manager.on("swipe", function(event) {
-        alert(event.type);
+    manager.on("swipedown swipeup swipeleft swiperight", function(event) {
         updateSnakeDirection(event.type.replace('swipe', ''));
     });
 
