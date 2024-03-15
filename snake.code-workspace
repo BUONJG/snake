@@ -4,5 +4,10 @@
 			"path": "."
 		}
 	],
-	"settings": {}
+	"settings": {
+		"html.format.enable": true,
+		"html.format.indentInnerHtml": false,
+		"html.format.indentHandlebars": true,
+		"editor.formatOnSave": true
+	}
 }

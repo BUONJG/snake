@@ -39,11 +39,11 @@ body {
 }
 
 .container > div[content='wall'] {
-    background-color: #6F4E37;
+    background-color: #855e42;
 }
 
 .container > div[content='apple'] {
-    background-image: url(./assets/pills/apple.png);
+    background-image: url(./assets/pills/fruits/apple.png);
     background-size: 80%;
     background-repeat: no-repeat;
     background-position: center center;
