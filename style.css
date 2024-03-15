@@ -43,7 +43,7 @@ body {
 }
 
 .container > div[content='apple'] {
-    background-image: url(./assets/apple.png);
+    background-image: url(./assets/pills/apple.png);
     background-size: 80%;
     background-repeat: no-repeat;
     background-position: center center;
