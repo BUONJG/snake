@@ -1,4 +1,5 @@
 import { Snake } from './snake.js';
+import { BoardCell } from './board-cell.js';
 
 class SnackAttack extends HTMLElement {
     #snake;
@@ -25,7 +26,7 @@ class SnackAttack extends HTMLElement {
         let content = '';
         for (let x = 0; x < this.#size; x++) {
             for (let y = 0; y < this.#size; y++) {
-                content += `<div id="${this.#getCellId([x, y])}"></div>`;
+                content += `<board-cell id="${this.#getCellId([x, y])}"></board-cell>`;
             }
         }
         this.innerHTML = content;
@@ -34,21 +35,11 @@ class SnackAttack extends HTMLElement {
     }
 
     setCellContent(coordinates, content) {
-        this.#getCell(coordinates).setAttribute('content', content);
-    }
-
-    clearCellContent(coordinates) {
-        this.#getCell(coordinates).removeAttribute('content');
-    }
-
-    getCellContent(coordinates) {
-        return this.#getCell(coordinates).getAttribute('content');
+        this.#getCell(coordinates).setContent(content);
     }
 
     #getCell(coordinates) {
-
-        const id = this.#getCellId(coordinates);
-        return document.getElementById(id);
+        return document.getElementById(this.#getCellId(coordinates));
     }
 
     #getCellId(coordinates) {
@@ -65,15 +56,15 @@ class SnackAttack extends HTMLElement {
     #init() {
         for (let x = 0; x < this.#size; x++) {
             for (let y = 0; y < this.#size; y++) {
-                this.clearCellContent([x, y])
+                this.#getCell([x, y]).clearContent();
             }
         }
 
         for (let x = 0; x < this.#size; x++) {
-            this.setCellContent([0, x], 'wall');
-            this.setCellContent([x, 0], 'wall');
-            this.setCellContent([this.#size - 1, x], 'wall');
-            this.setCellContent([x, this.#size - 1], 'wall');
+            this.#getCell([0, x]).setContent('wall');
+            this.#getCell([x, 0]).setContent('wall');
+            this.#getCell([this.#size - 1, x]).setContent('wall');
+            this.#getCell([x, this.#size - 1]).setContent('wall');
         }
 
         this.#snake = new Snake([Math.round(this.#size / 2) - 1, 3]);
@@ -82,7 +73,7 @@ class SnackAttack extends HTMLElement {
         });
         this.#snake.addEventListener('die', () => clearInterval(this.#interval));
         this.#snake.addEventListener('grow', event => this.#onSnakeGrow(event.detail));
-        this.#snake.addEventListener('shrink', event => this.clearCellContent(event.detail));
+        this.#snake.addEventListener('shrink', event => this.#getCell(event.detail).clearContent());
 
         this.#snake.init();
 
@@ -90,7 +81,7 @@ class SnackAttack extends HTMLElement {
     }
 
     #onSnakeGrow(coordinates) {
-        const cellContent = this.getCellContent(coordinates);
+        const cellContent = this.#getCell(coordinates).getContent();
 
         if (['wall', 'snake'].includes(cellContent)) {
             this.#snake.kill();
@@ -104,16 +95,16 @@ class SnackAttack extends HTMLElement {
             this.#addNewPill();
         }
 
-        this.setCellContent(coordinates, 'snake');
+        this.#getCell(coordinates).setContent('snake');
     }
 
     #addNewPill() {
         let coordinates;
         do {
             coordinates = [Math.floor(Math.random() * this.#size), Math.floor(Math.random() * this.#size)];
-        } while (this.getCellContent(coordinates) !== null);
+        } while (!this.#getCell(coordinates).isFree());
 
-        this.setCellContent(coordinates, 'apple');
+        this.#getCell(coordinates).setContent('apple');
     }
 }
 

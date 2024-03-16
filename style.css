@@ -17,7 +17,7 @@ body {
     justify-content: center;
 
     background-size: cover;
-    background-image: url(./assets/background.jpeg);
+    background-image: url(./assets/background.jpg);
     background-repeat: no-repeat;
     background-attachment: fixed;
     background-position: center;
@@ -32,26 +32,26 @@ snack-attack {
     overflow: hidden;
 }
 
-snack-attack > div {
+snack-attack > board-cell {
     width: calc(100% / var(--board-size));
     height: calc(100% / var(--board-size));
 
     background-color: #e0f0e3;
 }
 
-snack-attack > div:nth-child(odd) {
+snack-attack > board-cell:nth-child(odd) {
     background-color: #c8e1cc;
 }
 
-snack-attack > div[content='snake'] {
+snack-attack > board-cell[content='snake'] {
     background-color: #3386FF;
 }
 
-snack-attack > div[content='wall'] {
+snack-attack > board-cell[content='wall'] {
     background-color: #855e42;
 }
 
-snack-attack > div[content='apple'] {
+snack-attack > board-cell[content='apple'] {
     background-image: url(./assets/pills/fruits/apple.png);
     background-size: 80%;
     background-repeat: no-repeat;
