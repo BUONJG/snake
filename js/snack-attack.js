@@ -7,7 +7,6 @@ class SnackAttack extends HTMLElement {
     #interval;
 
     connectedCallback() {
-        document.querySelector(':root').style.setProperty('--board-size', this.#size);
         this.#resize();
         window.addEventListener('resize', () => this.#resize());
 
@@ -29,7 +28,19 @@ class SnackAttack extends HTMLElement {
                 content += `<board-cell id="${this.#getCellId([x, y])}"></board-cell>`;
             }
         }
-        this.innerHTML = content;
+        this.innerHTML = `<style>
+            board-cell {
+                width: calc(100% / ${this.#size});
+                height: calc(100% / ${this.#size});
+
+                background-color: #e0f0e3;
+            }
+
+            board-cell:nth-child(odd) {
+                background-color: #c8e1cc;
+            }
+        </style>
+        ${content}`;
 
         this.#init();
     }
@@ -77,7 +88,7 @@ class SnackAttack extends HTMLElement {
 
         this.#snake.init();
 
-        this.#addNewPill();
+        this.#addNewPellet();
     }
 
     #onSnakeGrow(coordinates) {
@@ -92,13 +103,13 @@ class SnackAttack extends HTMLElement {
 
         if (cellContent === 'apple') {
             this.#snake.incrementLength(3);
-            this.#addNewPill();
+            this.#addNewPellet();
         }
 
         this.#getCell(coordinates).setContent('snake');
     }
 
-    #addNewPill() {
+    #addNewPellet() {
         let coordinates;
         do {
             coordinates = [Math.floor(Math.random() * this.#size), Math.floor(Math.random() * this.#size)];
