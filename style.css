@@ -22,13 +22,3 @@ body {
     background-attachment: fixed;
     background-position: center;
 }
-
-snack-attack {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    opacity: 0.9;
-    border-radius: 2%;
-    overflow: hidden;
-}
-

@@ -2,23 +2,25 @@ import { pellets, pelletNames } from "./pellets.js";
 
 export class BoardCell extends HTMLElement {
     connectedCallback() {
-        this.innerHTML = `<style>
-            [content='snake'] {
+        const shadow = this.attachShadow({ mode: 'open' });
+        const style = document.createElement('style');
+        style.textContent = `
+            :host([content='snake']) {
                 background-color: #3386FF !important;
             }
 
-            [content='wall'] {
+            :host([content='wall']) {
                 background-color: #855e42 !important;
             }
 
-            ${pelletNames.map(pellet => `[content='${pellet}'] {
-                    background-image: url(./assets/pellets/${pellets.get(pellet).category}/${pellet}.png);
-                    background-size: 80%;
-                    background-repeat: no-repeat;
-                    background-position: center center;
-                }`).join('\n')}
-
-        </style>`;
+            ${pelletNames.map(pellet => `:host([content='${pellet}']) {
+                background-image: url(./assets/pellets/${pellets.get(pellet).category}/${pellet}.png);
+                background-size: 80%;
+                background-repeat: no-repeat;
+                background-position: center center;
+            }`).join('\n')}
+        `;
+        shadow.appendChild(style);
     }
 
     setContent(content) {
