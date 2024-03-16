@@ -1,4 +1,5 @@
 import { Board } from './board.js';
+import { Header } from './header.js';
 
 class SnackAttack extends HTMLElement {
     connectedCallback() {
@@ -6,6 +7,7 @@ class SnackAttack extends HTMLElement {
         window.addEventListener('resize', () => this.#resize());
 
         const shadow = this.attachShadow({ mode: 'open' });
+        shadow.appendChild(new Header());
         shadow.appendChild(new Board());
 
         const style = document.createElement('style');

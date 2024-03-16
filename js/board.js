@@ -78,6 +78,8 @@ export class Board extends HTMLElement {
         this.#snake.init();
 
         this.#addNewPellet();
+
+        this.parentNode.querySelector('snack-attack-header').reset();
     }
 
     #onSnakeGrow(coordinates) {
@@ -93,6 +95,8 @@ export class Board extends HTMLElement {
         if (cell.isPellet()) {
             this.#snake.eat(cell.getContent());
             this.#addNewPellet();
+
+            this.parentNode.querySelector('snack-attack-header').incrementScore(1);
         }
 
         this.#getCell(coordinates).setContent('snake');
