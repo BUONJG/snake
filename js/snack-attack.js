@@ -1,10 +1,10 @@
 import { Snake } from './snake.js';
 import { BoardCell } from './board-cell.js';
+import { pelletNames } from './pellets.js';
 
 class SnackAttack extends HTMLElement {
     #snake;
     #size = 25;
-    #interval;
 
     connectedCallback() {
         this.#resize();
@@ -45,16 +45,12 @@ class SnackAttack extends HTMLElement {
         this.#init();
     }
 
-    setCellContent(coordinates, content) {
-        this.#getCell(coordinates).setContent(content);
-    }
-
     #getCell(coordinates) {
         return document.getElementById(this.#getCellId(coordinates));
     }
 
     #getCellId(coordinates) {
-        return Array.isArray(coordinates) ? `${coordinates[0]}_${coordinates[1]}` : coordinates;
+        return `${coordinates[0]}_${coordinates[1]}`;
     }
 
     #resize() {
@@ -79,10 +75,6 @@ class SnackAttack extends HTMLElement {
         }
 
         this.#snake = new Snake([Math.round(this.#size / 2) - 1, 3]);
-        this.#snake.addEventListener('start', () => {
-            this.#interval = setInterval(() => this.#snake.move(), 100);
-        });
-        this.#snake.addEventListener('die', () => clearInterval(this.#interval));
         this.#snake.addEventListener('grow', event => this.#onSnakeGrow(event.detail));
         this.#snake.addEventListener('shrink', event => this.#getCell(event.detail).clearContent());
 
@@ -92,17 +84,17 @@ class SnackAttack extends HTMLElement {
     }
 
     #onSnakeGrow(coordinates) {
-        const cellContent = this.#getCell(coordinates).getContent();
+        const cell = this.#getCell(coordinates);
 
-        if (['wall', 'snake'].includes(cellContent)) {
+        if (cell.isObstacle()) {
             this.#snake.kill();
             alert('Game over!!');
             this.#init();
             return;
         }
 
-        if (cellContent === 'apple') {
-            this.#snake.incrementLength(3);
+        if (cell.isPellet()) {
+            this.#snake.eat(cell.getContent());
             this.#addNewPellet();
         }
 
@@ -115,7 +107,9 @@ class SnackAttack extends HTMLElement {
             coordinates = [Math.floor(Math.random() * this.#size), Math.floor(Math.random() * this.#size)];
         } while (!this.#getCell(coordinates).isFree());
 
-        this.#getCell(coordinates).setContent('apple');
+        const pelletIndex = Math.floor(Math.random() * pelletNames.length);
+
+        this.#getCell(coordinates).setContent(pelletNames[pelletIndex]);
     }
 }
 

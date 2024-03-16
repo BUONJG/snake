@@ -1,4 +1,7 @@
+import { pellets } from "./pellets.js";
+
 export class Snake extends EventTarget {
+    #moveInterval;
     #started = false;
     #length = 3;
     #body = [];
@@ -19,20 +22,37 @@ export class Snake extends EventTarget {
         }
     }
 
-    move() {
-        this.#grow();
+    eat(pelletName) {
+        const pellet = pellets.get(pelletName);
 
-        if (this.#body.length > this.#length) {
-            this.#shrink();
-        }
+        this.#incrementLength(pellet.lengthIncrement);
     }
 
-    incrementLength(increment) {
-        this.#length += increment;
+    start() {
+        this.#moveInterval = setInterval(() => this.#move(), 100);
     }
 
     kill() {
-        this.dispatchEvent(new CustomEvent("die"));
+        clearInterval(this.#moveInterval)
+    }
+
+    #move() {
+        this.#shrinkIfNeeded();
+        this.#grow();
+        this.#shrinkIfNeeded();
+    }
+
+    #incrementLength(increment) {
+        this.#length += increment;
+        this.#length = Math.max(3, this.#length);
+
+        console.log('new lenght', this.#length);
+    }
+
+    #shrinkIfNeeded() {
+        if (this.#body.length > this.#length) {
+            this.#shrink();
+        }
     }
 
     #grow() {
@@ -72,9 +92,8 @@ export class Snake extends EventTarget {
     }
 
     changeDirection(direction) {
-        if (!this.#started) {
-            this.#started = true;
-            this.dispatchEvent(new CustomEvent("start"))
+        if (!this.#moveInterval) {
+            this.start();
         }
         if (['right', 'left'].includes(this.#direction)) {
             if (direction === 'up') {

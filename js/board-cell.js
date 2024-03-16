@@ -1,3 +1,5 @@
+import { pellets, pelletNames } from "./pellets.js";
+
 export class BoardCell extends HTMLElement {
     connectedCallback() {
         this.innerHTML = `<style>
@@ -9,12 +11,13 @@ export class BoardCell extends HTMLElement {
                 background-color: #855e42 !important;
             }
 
-            [content='apple'] {
-                background-image: url(./assets/pellets/fruits/apple.png);
-                background-size: 80%;
-                background-repeat: no-repeat;
-                background-position: center center;
-            }
+            ${pelletNames.map(pellet => `[content='${pellet}'] {
+                    background-image: url(./assets/pellets/${pellets.get(pellet).category}/${pellet}.png);
+                    background-size: 80%;
+                    background-repeat: no-repeat;
+                    background-position: center center;
+                }`).join('\n')}
+
         </style>`;
     }
 
@@ -32,6 +35,14 @@ export class BoardCell extends HTMLElement {
 
     isFree() {
         return this.getContent() === null;
+    }
+
+    isPellet() {
+        return pellets.has(this.getContent());
+    }
+
+    isObstacle() {
+        return !this.isFree() && !this.isPellet();
     }
 }
 
