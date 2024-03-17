@@ -5,15 +5,10 @@ export class Header extends HTMLElement {
 
     connectedCallback() {
         const shadow = this.attachShadow({ mode: 'open' });
-
-        this.scoreImage = document.createElement('img');
-        this.scoreImage.classList.add('score-img');
-        shadow.appendChild(this.scoreImage);
-
-        this.score = document.createElement('div');
-        this.score.classList.add('score');
-        this.score.innerHTML = 0;
-        shadow.appendChild(this.score);
+        shadow.innerHTML = `
+            <img src="./assets/pellets/fruits/apple.png">
+            <div id="score">0</div>
+        `;
 
         const style = document.createElement('style');
         style.textContent = `
@@ -31,11 +26,10 @@ export class Header extends HTMLElement {
                 font-size: 24px;
             }
 
-            .score-img {
+            img {
                 padding: 0 15px;
                 height:32px;
                 width:32px;
-                content:url(./assets/pellets/fruits/apple.png);
             }
 
             .score {
@@ -50,12 +44,16 @@ export class Header extends HTMLElement {
 
     incrementScore(increment) {
         this.#score += increment;
-        this.score.innerHTML = this.#score;
+        this.#getScoreElement().innerHTML = this.#score;
     }
 
     reset() {
         this.#score = 0;
-        this.score.innerHTML = this.#score;
+        this.#getScoreElement().innerHTML = this.#score;
+    }
+
+    #getScoreElement() {
+        return this.shadowRoot.getElementById('score');
     }
 }
 

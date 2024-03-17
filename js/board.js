@@ -33,7 +33,7 @@ export class Board extends HTMLElement {
         style.textContent = `
             :host {
                 width: 100%;
-                height: 100%;
+                aspect-ratio: 1 / 1;
                 display: flex;
                 flex-direction: row;
                 flex-wrap: wrap;
@@ -79,7 +79,7 @@ export class Board extends HTMLElement {
 
         this.#addNewPellet();
 
-        this.parentNode.querySelector('snack-attack-header').reset();
+        this.#emit('init');
     }
 
     #onSnakeGrow(coordinates) {
@@ -96,7 +96,7 @@ export class Board extends HTMLElement {
             this.#snake.eat(cell.getContent());
             this.#addNewPellet();
 
-            this.parentNode.querySelector('snack-attack-header').incrementScore(1);
+            this.#emit('score-increment', { increment: 1 });
         }
 
         this.#getCell(coordinates).setContent('snake');
@@ -119,6 +119,10 @@ export class Board extends HTMLElement {
         const pelletIndex = Math.floor(Math.random() * pelletNames.length);
 
         this.#getCell(coordinates).setContent(pelletNames[pelletIndex]);
+    }
+
+    #emit(type, detail = {}) {
+        this.dispatchEvent(new CustomEvent(type, { detail }));
     }
 }
 

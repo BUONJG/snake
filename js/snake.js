@@ -2,7 +2,6 @@ import { pellets } from "./pellets.js";
 
 export class Snake extends EventTarget {
     #moveInterval;
-    #started = false;
     #length = 3;
     #body = [];
     #direction = 'right';
@@ -15,7 +14,7 @@ export class Snake extends EventTarget {
     }
 
     init() {
-        this.dispatchEvent(new CustomEvent("grow", { detail: this.#body[0] }));
+        this.#emit('grow', this.#body[0]);
 
         while (this.#body.length < this.#length) {
             this.#grow();
@@ -45,8 +44,6 @@ export class Snake extends EventTarget {
     #incrementLength(increment) {
         this.#length += increment;
         this.#length = Math.max(3, this.#length);
-
-        console.log('new lenght', this.#length);
     }
 
     #shrinkIfNeeded() {
@@ -62,13 +59,13 @@ export class Snake extends EventTarget {
 
         this.#body.push(newHeadPosition);
 
-        this.dispatchEvent(new CustomEvent("grow", { detail: newHeadPosition }));
+        this.#emit('grow', newHeadPosition);
     }
 
     #shrink() {
         const queueCoordinates = this.#body.shift();
 
-        this.dispatchEvent(new CustomEvent("shrink", { detail: queueCoordinates }));
+        this.#emit('shrink', queueCoordinates);
     }
 
     #deltaX() {
@@ -89,6 +86,10 @@ export class Snake extends EventTarget {
             return 1;
         }
         return 0;
+    }
+
+    #emit(type, detail = {}) {
+        this.dispatchEvent(new CustomEvent(type, { detail }));
     }
 
     changeDirection(direction) {

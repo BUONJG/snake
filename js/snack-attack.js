@@ -2,13 +2,16 @@ import { Board } from './board.js';
 import { Header } from './header.js';
 
 class SnackAttack extends HTMLElement {
+    #header;
+    #board;
+
     connectedCallback() {
-        this.#resize();
-        window.addEventListener('resize', () => this.#resize());
+        this.#header = new Header();
+        this.#board = new Board();
 
         const shadow = this.attachShadow({ mode: 'open' });
-        shadow.appendChild(new Header());
-        shadow.appendChild(new Board());
+        shadow.appendChild(this.#header);
+        shadow.appendChild(this.#board);
 
         const style = document.createElement('style');
         style.textContent = `
@@ -20,13 +23,18 @@ class SnackAttack extends HTMLElement {
             }
         `;
         shadow.appendChild(style);
+
+        this.#resize();
+        window.addEventListener('resize', () => this.#resize());
+
+        this.#board.addEventListener('init', () => this.#header.reset());
+        this.#board.addEventListener('score-increment', e => this.#header.incrementScore(e.detail.increment));
     }
 
     #resize() {
-        const size = Math.min(this.parentNode.clientHeight, this.parentNode.clientWidth);
+        const size = Math.min(this.parentNode.clientHeight - this.#header.clientHeight, this.parentNode.clientWidth);
 
         this.style.width = size + 'px';
-        this.style.height = size + 'px';
     }
 }
 
